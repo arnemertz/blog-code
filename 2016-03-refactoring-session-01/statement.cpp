@@ -39,6 +39,7 @@ struct YetAnotherStatement: Statement {
     std::cout << t << std::endl;
   }
   YetAnotherStatement( int i ): t{ ( double ) i * ( 10.6 / 0.7 ) } {}
+private:  
   double t;
 };
  
@@ -47,6 +48,7 @@ struct OtherStatement: Statement {
     std::cout << t << std::endl;
   }
   OtherStatement( int i ): t{ i } {}
+private:  
   int t;
 };
  
@@ -76,6 +78,7 @@ struct Declaration {
   void Analyze() {
     s_->Analyze();
   }
+private:  
   Statement const * const s_;
 };
  
