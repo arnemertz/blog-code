@@ -27,15 +27,6 @@ private:
 };
  
 struct CompoundStatement: Statement {
-  CompoundStatement() = default;
-  CompoundStatement(CompoundStatement&&) = default; 
-
-  CompoundStatement(CompoundStatement const&) = delete; 
-  CompoundStatement& operator=(CompoundStatement const&) = delete;
-  CompoundStatement& operator=(CompoundStatement&&) = delete;
-  
-  ~CompoundStatement() = default;
-  
   void Analyze() const final {
     for ( auto&& b : _statements ) {
       b->Analyze();
