@@ -4,8 +4,13 @@
  
 template<typename T>
 struct List {
-  List(): _list() {}
-  virtual ~List() {}
+  List() = default;
+  List(List const&) = default;
+  List(List&&) = default;
+  virtual ~List() = default;
+
+  List& operator=(List const&) = default;
+  List& operator=(List&&) = default;
  
   inline void Append( T const * t ) { _list.push_back( t ); }
   typedef typename std::vector<T const *>::const_iterator  const_iterator;
@@ -19,8 +24,8 @@ private:
 
 struct Statement {
   virtual void Analyze() const = 0;
-  Statement(){}
-  virtual ~Statement(){}
+  
+  virtual ~Statement() = default;
 };
  
 struct YetAnotherStatement: Statement {
@@ -36,7 +41,13 @@ struct OtherStatement: Statement {
 };
  
 struct CompoundStatement: Statement, List<Statement> {
-  CompoundStatement(): Statement(), List(){}
+  CompoundStatement() = default;
+  CompoundStatement(CompoundStatement&&) = default; 
+
+  CompoundStatement(CompoundStatement const&) = delete; 
+  CompoundStatement& operator=(CompoundStatement const&) = delete;
+  CompoundStatement& operator=(CompoundStatement&&) = delete;
+  
   ~CompoundStatement(){
     for( auto b = cbegin(), d = cend(); b != d; ++b ) delete const_cast<Statement *>( *b );
   }
