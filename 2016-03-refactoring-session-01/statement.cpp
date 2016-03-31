@@ -17,24 +17,6 @@ private:
   std::vector< T const * > _list;
 }; // struct List
 
-struct DoubleWord {
-  DoubleWord( double c ): c_( c ){}
-  double c_;
-};
- 
-struct Word {
-  Word( int i ): i_( i ) {}
-  int i_;
-};
- 
-std::ostream & operator<<( std::ostream &os, Word const & t ) {
-  return os << t.i_ << " ";
-}
- 
-std::ostream & operator<<( std::ostream &os, DoubleWord const & t ) {
-  return os << t.c_ << " ";
-}
- 
 struct Statement {
   virtual void Analyze() const = 0;
   Statement(){}
@@ -44,13 +26,13 @@ struct Statement {
 struct YetAnotherStatement: Statement {
   inline void Analyze() const final { std::cout << t << std::endl; }
   YetAnotherStatement( int i ): t{ ( double ) i * ( 10.6 / 0.7 ) } {}
-  DoubleWord t;
+  double t;
 };
  
 struct OtherStatement: Statement {
   inline void Analyze() const final { std::cout << t << std::endl; }
   OtherStatement( int i ): t{ i } {}
-  Word t;
+  int t;
 };
  
 struct CompoundStatement: Statement, List<Statement> {
