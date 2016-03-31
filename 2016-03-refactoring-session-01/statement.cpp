@@ -52,7 +52,7 @@ private:
   int t;
 };
  
-struct CompoundStatement: Statement, List<Statement> {
+struct CompoundStatement: Statement {
   CompoundStatement() = default;
   CompoundStatement(CompoundStatement&&) = default; 
 
@@ -61,16 +61,23 @@ struct CompoundStatement: Statement, List<Statement> {
   CompoundStatement& operator=(CompoundStatement&&) = delete;
   
   ~CompoundStatement(){
-    for ( auto b = cbegin(), d = cend(); b != d; ++b ) {
+    for ( auto b = _statements.cbegin(), d = _statements.cend(); b != d; ++b ) {
       delete const_cast<Statement *>( *b );
     }
   }
   
   void Analyze() const final {
-    for ( auto b = this->cbegin(); b != this->cend(); ++b ) {
+    for ( auto b = _statements.cbegin(); b != _statements.cend(); ++b ) {
       (*b)->Analyze();
     }
   }
+  
+  void Append(Statement const* statement) {
+    _statements.Append(statement);
+  }
+
+private:
+  List<Statement> _statements;
 };
  
 struct Declaration {
