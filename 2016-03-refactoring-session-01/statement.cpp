@@ -33,8 +33,8 @@ struct CompoundStatement: Statement {
     }
   }
   
-  void Append(Statement const* statement) {
-    _statements.push_back(std::unique_ptr<Statement const>{statement});
+  void Append(std::unique_ptr<Statement const> statement) {
+    _statements.push_back(std::move(statement));
   }
 
 private:
@@ -54,9 +54,9 @@ int main() {
   auto s = std::make_unique<CompoundStatement>();
   for ( int i = 1; i <= 10; ++i ) {
     if( i % 2 == 0 ) {
-      s->Append( new OtherStatement( i ) );
+      s->Append( std::make_unique<OtherStatement>( i ) );
     } else {
-      s->Append( new YetAnotherStatement( i ) );
+      s->Append( std::make_unique<YetAnotherStatement>( i ) );
     }
   }
   Statement const * const p_s = s.get();
