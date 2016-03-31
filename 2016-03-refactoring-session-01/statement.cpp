@@ -73,7 +73,7 @@ struct CompoundStatement: Statement, List<Statement> {
  
 struct Declaration {
   Declaration( Statement const * const s ): s_( s ){}
-  inline void Analyze() {
+  void Analyze() {
     s_->Analyze();
   }
   Statement const * const s_;
