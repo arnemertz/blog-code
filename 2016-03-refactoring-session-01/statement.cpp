@@ -12,15 +12,15 @@ struct List {
   List& operator=(List const&) = default;
   List& operator=(List&&) = default;
  
-  inline void Append( T const * t ) {
+  void Append( T const * t ) {
     _list.push_back( t );
   }
   typedef typename std::vector<T const *>::const_iterator  const_iterator;
  
-  inline const_iterator cbegin() const {
+  const_iterator cbegin() const {
     return _list.cbegin();
   }
-  inline const_iterator cend() const {
+  const_iterator cend() const {
     return _list.cend();
   }
  
@@ -35,7 +35,7 @@ struct Statement {
 };
  
 struct YetAnotherStatement: Statement {
-  inline void Analyze() const final {
+  void Analyze() const final {
     std::cout << t << std::endl;
   }
   YetAnotherStatement( int i ): t{ ( double ) i * ( 10.6 / 0.7 ) } {}
@@ -43,7 +43,7 @@ struct YetAnotherStatement: Statement {
 };
  
 struct OtherStatement: Statement {
-  inline void Analyze() const final {
+  void Analyze() const final {
     std::cout << t << std::endl;
   }
   OtherStatement( int i ): t{ i } {}
