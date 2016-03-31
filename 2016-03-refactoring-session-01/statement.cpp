@@ -2,32 +2,6 @@
 #include <vector>
 #include <memory>
  
-template<typename T>
-struct List {
-  List() = default;
-  List(List const&) = default;
-  List(List&&) = default;
-  virtual ~List() = default;
-
-  List& operator=(List const&) = default;
-  List& operator=(List&&) = default;
- 
-  void Append( T const * t ) {
-    _list.push_back( t );
-  }
-  typedef typename std::vector<T const *>::const_iterator  const_iterator;
- 
-  const_iterator cbegin() const {
-    return _list.cbegin();
-  }
-  const_iterator cend() const {
-    return _list.cend();
-  }
- 
-private:
-  std::vector< T const * > _list;
-}; // struct List
-
 struct Statement {
   virtual void Analyze() const = 0;
   
@@ -61,23 +35,23 @@ struct CompoundStatement: Statement {
   CompoundStatement& operator=(CompoundStatement&&) = delete;
   
   ~CompoundStatement(){
-    for ( auto b = _statements.cbegin(), d = _statements.cend(); b != d; ++b ) {
-      delete const_cast<Statement *>( *b );
+    for ( auto&& b : _statements ) {
+      delete const_cast<Statement *>( b );
     }
   }
   
   void Analyze() const final {
-    for ( auto b = _statements.cbegin(); b != _statements.cend(); ++b ) {
-      (*b)->Analyze();
+    for ( auto&& b : _statements ) {
+      b->Analyze();
     }
   }
   
   void Append(Statement const* statement) {
-    _statements.Append(statement);
+    _statements.push_back(statement);
   }
 
 private:
-  List<Statement> _statements;
+  std::vector<Statement const*> _statements;
 };
  
 struct Declaration {
