@@ -34,11 +34,7 @@ struct CompoundStatement: Statement {
   CompoundStatement& operator=(CompoundStatement const&) = delete;
   CompoundStatement& operator=(CompoundStatement&&) = delete;
   
-  ~CompoundStatement(){
-    for ( auto&& b : _statements ) {
-      delete const_cast<Statement *>( b );
-    }
-  }
+  ~CompoundStatement() = default;
   
   void Analyze() const final {
     for ( auto&& b : _statements ) {
@@ -47,11 +43,11 @@ struct CompoundStatement: Statement {
   }
   
   void Append(Statement const* statement) {
-    _statements.push_back(statement);
+    _statements.push_back(std::unique_ptr<Statement const>{statement});
   }
 
 private:
-  std::vector<Statement const*> _statements;
+  std::vector<std::unique_ptr<Statement const>> _statements;
 };
  
 struct Declaration {
