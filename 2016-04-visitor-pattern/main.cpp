@@ -19,10 +19,10 @@ public:
     os << '\n';
   }
 
-  void visitAdd(AddExpression& addExpr) override {
+  void visitAdd(BinaryExpression& addExpr) override {
     visitBinaryExpression(addExpr, " + ");  
   }
-  void visitMultiply(MultiplyExpression& mulExpr) override {
+  void visitMultiply(BinaryExpression& mulExpr) override {
     visitBinaryExpression(mulExpr, " * ");  
   }
   void visitNumber(NumberExpression& numExpr) override {
@@ -31,9 +31,9 @@ public:
 };
 
 int main() {
-  auto expression = std::make_unique<AddExpression>(
+  auto expression = std::make_unique<BinaryExpression>(
     std::make_unique<NumberExpression>(3),
-    std::make_unique<MultiplyExpression>(
+    std::make_unique<BinaryExpression>(
       std::make_unique<NumberExpression>(4),    
       std::make_unique<NumberExpression>(6),
 	  Expression::MULTIPLY

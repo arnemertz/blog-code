@@ -25,14 +25,6 @@ struct BinaryExpression : Expression {
   { assert(lhs && rhs); }
 };
   
-struct AddExpression : BinaryExpression {
-  using BinaryExpression::BinaryExpression;
-};
-    
-struct MultiplyExpression : BinaryExpression {
-  using BinaryExpression::BinaryExpression;
-};
-
 struct NumberExpression : Expression {
   double number;
   NumberExpression(double d) : Expression{NUMBER}, number{d} {}
