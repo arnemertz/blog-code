@@ -15,10 +15,14 @@ struct AbstractWindow {
 };
 
 struct AbstractWidgetFactory {
-  virtual std::unique_ptr<AbstractButton> createButton() const = 0;
+  std::unique_ptr<AbstractButton> createButton() const {
+    return doCreateButton();
+  }
   virtual std::unique_ptr<AbstractWindow> createWindow() const = 0;
   virtual std::unique_ptr<AbstractWindow> createMessageWindow(std::string const& text) = 0;
   virtual ~AbstractWidgetFactory() = default;
+private:
+  virtual std::unique_ptr<AbstractButton> doCreateButton() const = 0;
 };
 
 
@@ -36,7 +40,7 @@ struct FancyWindow : AbstractWindow {
 };
 
 struct FancyWidgetFactory : AbstractWidgetFactory {
-  std::unique_ptr<AbstractButton> createButton() const final override {
+  std::unique_ptr<FancyButton> createButton() const {
     return std::make_unique<FancyButton>();  
   }
   
@@ -48,12 +52,16 @@ struct FancyWidgetFactory : AbstractWidgetFactory {
     auto theWindow = createWindow();
     theWindow->addText(text);
  
-    auto theButton = createButton(); //unique_ptr<AbstractButton>
-    static_cast<FancyButton*>(theButton.get())->doFancyStuff(); //EWW!
+    auto theButton = createButton(); //unique_ptr<FancyButton>
+    theButton->doFancyStuff();
     theButton->setText("OK");
     theWindow->add(std::move(theButton));
     return theWindow;  
   }  
+private:
+  virtual std::unique_ptr<AbstractButton> doCreateButton() const final override {
+    return createButton();
+  }
 };
 
 
