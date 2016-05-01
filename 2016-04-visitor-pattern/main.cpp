@@ -7,9 +7,9 @@ class ExpressionPrinter : public ExpressionVisitor {
   std::ostream& os;
   
   void visitBinaryExpression(BinaryExpression& binExpr, std::string const& infix) {
-    binExpr.left().accept(*this);
+    binExpr.lhs->accept(*this);
     os << infix;
-    binExpr.right().accept(*this);
+    binExpr.rhs->accept(*this);
   }
   
 public:
@@ -26,7 +26,7 @@ public:
     visitBinaryExpression(mulExpr, " * ");  
   }
   void visitNumber(NumberExpression& numExpr) override {
-    os << numExpr.getNumber();
+    os << numExpr.number;
   }
 };
 
@@ -35,8 +35,10 @@ int main() {
     std::make_unique<NumberExpression>(3),
     std::make_unique<MultiplyExpression>(
       std::make_unique<NumberExpression>(4),    
-      std::make_unique<NumberExpression>(6)
-    )
+      std::make_unique<NumberExpression>(6),
+	  Expression::MULTIPLY
+    ),
+	Expression::ADD
   );
   
   ExpressionPrinter printer(std::cout);

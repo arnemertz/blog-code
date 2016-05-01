@@ -4,46 +4,46 @@
 
 #include "expressionvisitor.h"
 
-class Expression {
-public:
+struct Expression {
+  enum ExpressionType {
+    ADD,
+    MULTIPLY,
+    NUMBER
+  };
+  ExpressionType expressionType;
+  
+  Expression(ExpressionType eType) : expressionType{eType} {}
   virtual ~Expression() = default;
   virtual void accept(ExpressionVisitor&) = 0;
 };
 using ExpressionPtr = std::unique_ptr<Expression>;
 
-class BinaryExpression : public Expression {
+struct BinaryExpression : Expression {
   ExpressionPtr lhs;
   ExpressionPtr rhs;
-public:
-  BinaryExpression(ExpressionPtr left, ExpressionPtr right) 
-    : lhs(move(left)), rhs(move(right))
+
+  BinaryExpression(ExpressionPtr left, ExpressionPtr right, ExpressionType eType) 
+    : Expression{eType}, lhs{move(left)}, rhs{move(right)}
   { assert(lhs && rhs); }
-  
-  Expression& left() { return *lhs; }
-  Expression& right() { return *rhs; }
 };
   
-class AddExpression : public BinaryExpression {
-public:
+struct AddExpression : BinaryExpression {
   using BinaryExpression::BinaryExpression;
   void accept(ExpressionVisitor& visitor) override {
     visitor.visitAdd(*this);  
   }
 };
     
-class MultiplyExpression : public BinaryExpression {
-public:
+struct MultiplyExpression : BinaryExpression {
   using BinaryExpression::BinaryExpression;
   void accept(ExpressionVisitor& visitor) override {
     visitor.visitMultiply(*this);  
   }
 };
 
-class NumberExpression : public Expression {
+struct NumberExpression : Expression {
   double number;
-public:
-  NumberExpression(double d) : number(d) {}
-  double getNumber() const { return number; }
+  NumberExpression(double d) : Expression{NUMBER}, number{d} {}
   void accept(ExpressionVisitor& visitor) override {
     visitor.visitNumber(*this);  
   }
