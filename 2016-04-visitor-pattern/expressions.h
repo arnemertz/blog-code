@@ -1,11 +1,14 @@
+#pragma once
 #include <cassert>
 #include <memory>
 
+#include "expressionvisitor.h"
+
 class Expression {
 public:
-  virtual ~Expression() = 0;
+  virtual ~Expression() = default;
+  virtual void accept(ExpressionVisitor&) = 0;
 };
-inline Expression::~Expression() = default;
 using ExpressionPtr = std::unique_ptr<Expression>;
 
 class BinaryExpression : public Expression {
@@ -23,11 +26,17 @@ public:
 class AddExpression : public BinaryExpression {
 public:
   using BinaryExpression::BinaryExpression;
+  void accept(ExpressionVisitor& visitor) override {
+    visitor.visitAdd(*this);  
+  }
 };
     
 class MultiplyExpression : public BinaryExpression {
 public:
   using BinaryExpression::BinaryExpression;
+  void accept(ExpressionVisitor& visitor) override {
+    visitor.visitMultiply(*this);  
+  }
 };
 
 class NumberExpression : public Expression {
@@ -35,4 +44,7 @@ class NumberExpression : public Expression {
 public:
   NumberExpression(double d) : number(d) {}
   double getNumber() const { return number; }
+  void accept(ExpressionVisitor& visitor) override {
+    visitor.visitNumber(*this);  
+  }
 };
