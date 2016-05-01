@@ -7,15 +7,15 @@ class ExpressionPrinter : public ExpressionVisitor {
   std::ostream& os;
   
   void visitBinaryExpression(BinaryExpression& binExpr, std::string const& infix) {
-    binExpr.lhs->accept(*this);
+    visit(*binExpr.lhs);
     os << infix;
-    binExpr.rhs->accept(*this);
+    visit(*binExpr.rhs);
   }
   
 public:
   ExpressionPrinter(std::ostream& ostream) : os(ostream) {}
   void print(Expression& expr) {
-    expr.accept(*this);
+    visit(expr);
     os << '\n';
   }
 

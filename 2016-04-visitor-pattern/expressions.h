@@ -2,8 +2,6 @@
 #include <cassert>
 #include <memory>
 
-#include "expressionvisitor.h"
-
 struct Expression {
   enum ExpressionType {
     ADD,
@@ -13,9 +11,9 @@ struct Expression {
   ExpressionType expressionType;
   
   Expression(ExpressionType eType) : expressionType{eType} {}
-  virtual ~Expression() = default;
-  virtual void accept(ExpressionVisitor&) = 0;
+  virtual ~Expression() = 0;
 };
+inline Expression::~Expression() = default;
 using ExpressionPtr = std::unique_ptr<Expression>;
 
 struct BinaryExpression : Expression {
@@ -29,22 +27,13 @@ struct BinaryExpression : Expression {
   
 struct AddExpression : BinaryExpression {
   using BinaryExpression::BinaryExpression;
-  void accept(ExpressionVisitor& visitor) override {
-    visitor.visitAdd(*this);  
-  }
 };
     
 struct MultiplyExpression : BinaryExpression {
   using BinaryExpression::BinaryExpression;
-  void accept(ExpressionVisitor& visitor) override {
-    visitor.visitMultiply(*this);  
-  }
 };
 
 struct NumberExpression : Expression {
   double number;
   NumberExpression(double d) : Expression{NUMBER}, number{d} {}
-  void accept(ExpressionVisitor& visitor) override {
-    visitor.visitNumber(*this);  
-  }
 };
