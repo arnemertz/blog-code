@@ -40,7 +40,7 @@ struct FancyWindow : AbstractWindow {
 };
 
 struct FancyWidgetFactory : AbstractWidgetFactory {
-  std::unique_ptr<FancyButton> createButton() const {
+  std::unique_ptr<FancyButton> createFancyButton() const {
     return std::make_unique<FancyButton>();  
   }
   
@@ -52,7 +52,7 @@ struct FancyWidgetFactory : AbstractWidgetFactory {
     auto theWindow = createWindow();
     theWindow->addText(text);
  
-    auto theButton = createButton(); //unique_ptr<FancyButton>
+    auto theButton = createFancyButton(); //unique_ptr<FancyButton>
     theButton->doFancyStuff();
     theButton->setText("OK");
     theWindow->add(std::move(theButton));
@@ -60,7 +60,7 @@ struct FancyWidgetFactory : AbstractWidgetFactory {
   }  
 private:
   virtual std::unique_ptr<AbstractButton> doCreateButton() const final override {
-    return createButton();
+    return createFancyButton();
   }
 };
 
