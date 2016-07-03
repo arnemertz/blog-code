@@ -72,6 +72,14 @@ struct GaussJordanMatrix {
     }
     y[rowIndex] /= diagonalElement;
   }
+
+  Vector getVectorInOriginalOrder() {
+    Vector v = y;
+    for (int i=0;i<rowCount();++i) {
+      std::swap(v[i], v[rowIndices[i]]);
+    }
+    return v;
+  }
 };
 
 // Solve y=m*x for x
@@ -97,10 +105,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
       }
     }
   }
-  for (int i=0;i<rowCount;++i) {
-    std::swap(gaussJordan.y[i], gaussJordan.y[gaussJordan.rowIndices[i]]);
-  }
-  return gaussJordan.y;
+  return gaussJordan.getVectorInOriginalOrder();
 }
 
 
