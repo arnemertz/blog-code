@@ -42,17 +42,19 @@ struct GaussJordanMatrix {
   GaussJordanMatrix(Matrix matrix, Vector vector)
     : m{std::move(matrix)}, y{std::move(vector)}, rowIndices{}
   { 
-    rowIndices.resize(m.rows());
+    assert(rowCount()==m.cols());
+
+    rowIndices.resize(rowCount());
     std::iota(std::begin(rowIndices), std::end(rowIndices), 0);
   }
+
+  int rowCount() const { return m.rows(); }
 };
 
 // Solve y=m*x for x
 Vector gaussJordanElimination(Matrix m, Vector y) {
   GaussJordanMatrix gaussJordan{std::move(m), std::move(y)};
-
-  int rowCount = gaussJordan.m.rows();
-  assert(rowCount==gaussJordan.m.cols());
+  int rowCount = gaussJordan.rowCount();
 
   for (int row=0; row<rowCount; ++row) {
     // Find a row that has a non-zero value in the current column
