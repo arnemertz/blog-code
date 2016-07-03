@@ -48,11 +48,7 @@ Vector invertMatrixMultiplication(Matrix m, Vector y) {
           break;
         }
       }
-      for (int j=0; j!=n; ++j) {
-        float temp = m[row][j];
-        m[row][j] = m[i][j];
-        m[i][j] = temp;
-      }
+      std::swap(m[i], m[row]);
       std::swap(y[i], y[row]);
       std::swap(ref[i], ref[row]);
     }
