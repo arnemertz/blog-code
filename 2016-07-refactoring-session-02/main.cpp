@@ -36,20 +36,20 @@ typedef vector<float> Vector;
 
 // Solve y=m*x for x
 Vector gaussJordanElimination(Matrix m, Vector y) {
-  int n = m.rows();
-  assert(n==m.cols());
-  vector<int> rowIndices(n);
+  int rowCount = m.rows();
+  assert(rowCount==m.cols());
+  vector<int> rowIndices(rowCount);
 
-  for (int i=0;i<n;++i) {
+  for (int i=0;i<rowCount;++i) {
     rowIndices[i] = i;
   }
 
-  for (int row=0; row<n; ++row) {
+  for (int row=0; row<rowCount; ++row) {
     // Find a row that has a non-zero value in the current column
     {
       int i = row;
       for (;;++i) {
-        assert(i<n);
+        assert(i<rowCount);
         if (m[i][row]!=0) {
           break;
         }
@@ -61,23 +61,23 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
     {
       // Normalize row to have diagonal element be 1.0
       float v = m[row][row];
-      for (int j=row;j<n;++j) {
+      for (int j=row;j<rowCount;++j) {
         m[row][j] /= v;
       }
       y[row] /= v;
     }
     // Make all lower rows have zero in this column
-    for (int j=0;j<n;++j) {
+    for (int j=0;j<rowCount;++j) {
       if (j!=row) {
         float v = m[j][row];
-        for (int k=row;k<n;++k) {
+        for (int k=row;k<rowCount;++k) {
           m[j][k] -= m[row][k]*v;
         }
         y[j] -= y[row]*v;
       }
     }
   }
-  for (int i=0;i<n;++i) {
+  for (int i=0;i<rowCount;++i) {
     std::swap(y[i], y[rowIndices[i]]);
   }
   return y;
