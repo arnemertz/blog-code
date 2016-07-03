@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <algorithm>
+#include <numeric>
 
 
 using std::vector;
@@ -37,19 +38,21 @@ struct GaussJordanMatrix {
   Matrix m;
   Vector y;
   vector<int> rowIndices;
+
+  GaussJordanMatrix(Matrix matrix, Vector vector)
+    : m{std::move(matrix)}, y{std::move(vector)}, rowIndices{}
+  { 
+    rowIndices.resize(m.rows());
+    std::iota(std::begin(rowIndices), std::end(rowIndices), 0);
+  }
 };
 
 // Solve y=m*x for x
 Vector gaussJordanElimination(Matrix m, Vector y) {
-  GaussJordanMatrix gaussJordan{std::move(m), std::move(y), {}};
+  GaussJordanMatrix gaussJordan{std::move(m), std::move(y)};
 
   int rowCount = gaussJordan.m.rows();
   assert(rowCount==gaussJordan.m.cols());
-  gaussJordan.rowIndices.resize(rowCount);
-
-  for (int i=0;i<rowCount;++i) {
-    gaussJordan.rowIndices[i] = i;
-  }
 
   for (int row=0; row<rowCount; ++row) {
     // Find a row that has a non-zero value in the current column
