@@ -38,10 +38,10 @@ typedef vector<float> Vector;
 Vector gaussJordanElimination(Matrix m, Vector y) {
   int n = m.rows();
   assert(n==m.cols());
-  vector<int> ref(n);
+  vector<int> rowIndices(n);
 
   for (int i=0;i<n;++i) {
-    ref[i] = i;
+    rowIndices[i] = i;
   }
 
   for (int row=0; row<n; ++row) {
@@ -56,7 +56,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
       }
       std::swap(m[i], m[row]);
       std::swap(y[i], y[row]);
-      std::swap(ref[i], ref[row]);
+      std::swap(rowIndices[i], rowIndices[row]);
     }
     {
       // Normalize row to have diagonal element be 1.0
@@ -78,7 +78,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
     }
   }
   for (int i=0;i<n;++i) {
-    std::swap(y[i], y[ref[i]]);
+    std::swap(y[i], y[rowIndices[i]]);
   }
   return y;
 }
