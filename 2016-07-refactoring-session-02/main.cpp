@@ -49,6 +49,15 @@ struct GaussJordanMatrix {
   }
 
   int rowCount() const { return m.rows(); }
+  int indexOfRowWithNonzeroColumn(int columnIndex) {
+    for (int rowIndex = columnIndex; rowIndex < rowCount(); ++rowIndex) {
+      if (m[rowIndex][columnIndex]!=0) {
+        return rowIndex;
+      }
+    }
+    assert(false);
+    return -1;
+  }
 };
 
 // Solve y=m*x for x
@@ -59,13 +68,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
   for (int row=0; row<rowCount; ++row) {
     // Find a row that has a non-zero value in the current column
     {
-      int i = row;
-      for (;;++i) {
-        assert(i<rowCount);
-        if (gaussJordan.m[i][row]!=0) {
-          break;
-        }
-      }
+      int i = gaussJordan.indexOfRowWithNonzeroColumn(row);
       std::swap(gaussJordan.m[i], gaussJordan.m[row]);
       std::swap(gaussJordan.y[i], gaussJordan.y[row]);
       std::swap(gaussJordan.rowIndices[i], gaussJordan.rowIndices[row]);
