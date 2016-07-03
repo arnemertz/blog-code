@@ -21,7 +21,7 @@ typedef vector<float> Vector;
 // Solve y=m*x for x using Gauss-Jordan Elimination.
 // Result is placed back in y
 // Identity is placed back in m
-void solve(Matrix &m,Vector &y) {
+void invertMatrixMultiplication(Matrix &m, Vector &y) {
   int n = m.rows();
   assert(n==m.cols());
   vector<int> ref(n);
@@ -136,7 +136,7 @@ int main() {
 
   Matrix temp = m;
   Vector x = y;
-  solve(temp,x);
+  invertMatrixMultiplication(temp, x);
 
   Vector mx = product(m,x);
 
