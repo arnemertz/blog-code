@@ -64,6 +64,14 @@ struct GaussJordanMatrix {
     std::swap(y[i], y[j]);
     std::swap(rowIndices[i], rowIndices[j]);
   }
+  void normalizeRow(int rowIndex) {
+    auto& row = m[rowIndex];
+    auto diagonalElement = row[rowIndex];
+    for (auto& rowEntry : row) {
+      rowEntry /= diagonalElement;
+    }
+    y[rowIndex] /= diagonalElement;
+  }
 };
 
 // Solve y=m*x for x
@@ -77,14 +85,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
       int i = gaussJordan.indexOfRowWithNonzeroColumn(row);
       gaussJordan.swapRows(row,i);
     }
-    {
-      // Normalize row to have diagonal element be 1.0
-      float v = gaussJordan.m[row][row];
-      for (int j=row;j<rowCount;++j) {
-        gaussJordan.m[row][j] /= v;
-      }
-      gaussJordan.y[row] /= v;
-    }
+    gaussJordan.normalizeRow(row);
     // Make all lower rows have zero in this column
     for (int j=0;j<rowCount;++j) {
       if (j!=row) {
