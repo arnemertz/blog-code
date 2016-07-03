@@ -58,6 +58,12 @@ struct GaussJordanMatrix {
     assert(false);
     return -1;
   }
+
+  void swapRows(int i, int j) {
+    std::swap(m[i], m[j]);
+    std::swap(y[i], y[j]);
+    std::swap(rowIndices[i], rowIndices[j]);
+  }
 };
 
 // Solve y=m*x for x
@@ -69,9 +75,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
     // Find a row that has a non-zero value in the current column
     {
       int i = gaussJordan.indexOfRowWithNonzeroColumn(row);
-      std::swap(gaussJordan.m[i], gaussJordan.m[row]);
-      std::swap(gaussJordan.y[i], gaussJordan.y[row]);
-      std::swap(gaussJordan.rowIndices[i], gaussJordan.rowIndices[row]);
+      gaussJordan.swapRows(row,i);
     }
     {
       // Normalize row to have diagonal element be 1.0
