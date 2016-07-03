@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 
 
 using std::vector;
@@ -52,16 +53,8 @@ void invertMatrixMultiplication(Matrix &m, Vector &y) {
         m[row][j] = m[i][j];
         m[i][j] = temp;
       }
-      {
-        float temp = y[i];
-        y[i] = y[row];
-        y[row] = temp;
-      }
-      {
-        int temp = ref[i];
-        ref[i] = ref[row];
-        ref[row] = temp;
-      }
+      std::swap(y[i], y[row]);
+      std::swap(ref[i], ref[row]);
     }
     {
       // Normalize row to have diagonal element be 1.0
@@ -83,9 +76,7 @@ void invertMatrixMultiplication(Matrix &m, Vector &y) {
     }
   }
   for (int i=0;i<n;++i) {
-    float temp = y[i];
-    y[i] = y[ref[i]];
-    y[ref[i]] = temp;
+    std::swap(y[i], y[ref[i]]);
   }
 }
 
