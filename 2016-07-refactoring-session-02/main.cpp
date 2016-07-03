@@ -7,11 +7,18 @@
 using std::vector;
 using std::cout;
 
+class Matrix {
+  typedef vector<float> Row;
+  vector<Row> values;
+public:
+  Matrix(std::initializer_list<vector<float>> matrixValues)
+    : values{matrixValues}
+  {}
 
-struct Matrix : vector<vector<float>> {
-  using vector<vector<float>>::vector;
-  int rows() const { return size(); }
-  int cols() const { return (*this)[0].size(); }
+  int rows() const { return values.size(); }
+  int cols() const { return values[0].size(); }
+  Row& operator[](std::size_t index) { return values[index]; }
+  Row const& operator[](std::size_t index) const { return values[index]; }
 };
 
 
@@ -94,7 +101,7 @@ static void print_vector(const char *name,const Vector &b) {
 
 static void print_matrix(const char *name,const Matrix &temp) {
   cout << name << "=\n";
-  for (int i=0, m=temp.size(); i!=m; ++i) {
+  for (int i=0, m=temp.rows(); i!=m; ++i) {
     for (int j=0, n=temp[i].size(); j!=n; ++j) {
       cout << "  " << temp[i][j];
     }
