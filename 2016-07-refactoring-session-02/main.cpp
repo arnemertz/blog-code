@@ -29,7 +29,7 @@ typedef vector<float> Vector;
 // Solve y=m*x for x using Gauss-Jordan Elimination.
 // Result is placed back in y
 // Identity is placed back in m
-void invertMatrixMultiplication(Matrix m, Vector &y) {
+Vector invertMatrixMultiplication(Matrix m, Vector y) {
   int n = m.rows();
   assert(n==m.cols());
   vector<int> ref(n);
@@ -78,6 +78,7 @@ void invertMatrixMultiplication(Matrix m, Vector &y) {
   for (int i=0;i<n;++i) {
     std::swap(y[i], y[ref[i]]);
   }
+  return y;
 }
 
 
@@ -132,8 +133,7 @@ int main() {
 
   Vector y = {0.5,1.2,2.3};
 
-  Vector x = y;
-  invertMatrixMultiplication(m, x);
+  Vector x = invertMatrixMultiplication(m, y);
 
   Vector mx = product(m,x);
 
