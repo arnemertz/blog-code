@@ -33,15 +33,22 @@ public:
 
 typedef vector<float> Vector;
 
+struct GaussJordanMatrix {
+  Matrix m;
+  Vector y;
+  vector<int> rowIndices;
+};
 
 // Solve y=m*x for x
 Vector gaussJordanElimination(Matrix m, Vector y) {
-  int rowCount = m.rows();
-  assert(rowCount==m.cols());
-  vector<int> rowIndices(rowCount);
+  GaussJordanMatrix gaussJordan{std::move(m), std::move(y), {}};
+
+  int rowCount = gaussJordan.m.rows();
+  assert(rowCount==gaussJordan.m.cols());
+  gaussJordan.rowIndices.resize(rowCount);
 
   for (int i=0;i<rowCount;++i) {
-    rowIndices[i] = i;
+    gaussJordan.rowIndices[i] = i;
   }
 
   for (int row=0; row<rowCount; ++row) {
@@ -50,37 +57,37 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
       int i = row;
       for (;;++i) {
         assert(i<rowCount);
-        if (m[i][row]!=0) {
+        if (gaussJordan.m[i][row]!=0) {
           break;
         }
       }
-      std::swap(m[i], m[row]);
-      std::swap(y[i], y[row]);
-      std::swap(rowIndices[i], rowIndices[row]);
+      std::swap(gaussJordan.m[i], gaussJordan.m[row]);
+      std::swap(gaussJordan.y[i], gaussJordan.y[row]);
+      std::swap(gaussJordan.rowIndices[i], gaussJordan.rowIndices[row]);
     }
     {
       // Normalize row to have diagonal element be 1.0
-      float v = m[row][row];
+      float v = gaussJordan.m[row][row];
       for (int j=row;j<rowCount;++j) {
-        m[row][j] /= v;
+        gaussJordan.m[row][j] /= v;
       }
-      y[row] /= v;
+      gaussJordan.y[row] /= v;
     }
     // Make all lower rows have zero in this column
     for (int j=0;j<rowCount;++j) {
       if (j!=row) {
-        float v = m[j][row];
+        float v = gaussJordan.m[j][row];
         for (int k=row;k<rowCount;++k) {
-          m[j][k] -= m[row][k]*v;
+          gaussJordan.m[j][k] -= gaussJordan.m[row][k]*v;
         }
-        y[j] -= y[row]*v;
+        gaussJordan.y[j] -= gaussJordan.y[row]*v;
       }
     }
   }
   for (int i=0;i<rowCount;++i) {
-    std::swap(y[i], y[rowIndices[i]]);
+    std::swap(gaussJordan.y[i], gaussJordan.y[gaussJordan.rowIndices[i]]);
   }
-  return y;
+  return gaussJordan.y;
 }
 
 
