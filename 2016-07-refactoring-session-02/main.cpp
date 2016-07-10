@@ -104,13 +104,9 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
   int rowCount = gaussJordan.rowCount();
 
   for (int row=0; row<rowCount; ++row) {
-    // Find a row that has a non-zero value in the current column
-    {
-      int i = gaussJordan.indexOfRowWithNonzeroColumn(row);
-      gaussJordan.swapRows(row,i);
-    }
+    int i = gaussJordan.indexOfRowWithNonzeroColumn(row);
+    gaussJordan.swapRows(row,i);
     gaussJordan.normalizeRow(row);
-    // Make all lower rows have zero in this column
     gaussJordan.subtractToZeroInColumn(row);
   }
   return gaussJordan.getVectorInOriginalOrder();
