@@ -72,6 +72,14 @@ struct GaussJordanMatrix {
     }
     y[rowIndex] /= diagonalElement;
   }
+  void subtractRow(int rowIndex, float factor, int fromRowIndex) {
+    auto const& row = m[rowIndex];
+    auto& fromRow = m[fromRowIndex];
+    for (int k=0;k<rowCount();++k) {
+      fromRow[k] -= row[k]*factor;
+    }
+    y[fromRowIndex] -= y[rowIndex]*factor;
+  }
 
   Vector getVectorInOriginalOrder() {
     Vector v = y;
@@ -98,10 +106,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
     for (int j=0;j<rowCount;++j) {
       if (j!=row) {
         float v = gaussJordan.m[j][row];
-        for (int k=row;k<rowCount;++k) {
-          gaussJordan.m[j][k] -= gaussJordan.m[row][k]*v;
-        }
-        gaussJordan.y[j] -= gaussJordan.y[row]*v;
+	gaussJordan.subtractRow(row, v, j);
       }
     }
   }
