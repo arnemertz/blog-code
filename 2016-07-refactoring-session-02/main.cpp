@@ -34,11 +34,12 @@ public:
 
 typedef vector<float> Vector;
 
-struct GaussJordanMatrix {
+class GaussJordanMatrix {
   Matrix m;
   Vector y;
   vector<int> rowIndices;
 
+public:
   GaussJordanMatrix(Matrix matrix, Vector vector)
     : m{std::move(matrix)}, y{std::move(vector)}, rowIndices{}
   { 
@@ -48,7 +49,10 @@ struct GaussJordanMatrix {
     std::iota(std::begin(rowIndices), std::end(rowIndices), 0);
   }
 
-  int rowCount() const { return m.rows(); }
+  int rowCount() const {
+    return m.rows();
+  }
+
   int indexOfRowWithNonzeroColumn(int columnIndex) {
     for (int rowIndex = columnIndex; rowIndex < rowCount(); ++rowIndex) {
       if (m[rowIndex][columnIndex]!=0) {
@@ -64,6 +68,7 @@ struct GaussJordanMatrix {
     std::swap(y[i], y[j]);
     std::swap(rowIndices[i], rowIndices[j]);
   }
+
   void normalizeRow(int rowIndex) {
     auto& row = m[rowIndex];
     auto diagonalElement = row[rowIndex];
@@ -72,6 +77,7 @@ struct GaussJordanMatrix {
     }
     y[rowIndex] /= diagonalElement;
   }
+
   void subtractRow(int rowIndex, float factor, int fromRowIndex) {
     auto const& row = m[rowIndex];
     auto& fromRow = m[fromRowIndex];
@@ -80,6 +86,7 @@ struct GaussJordanMatrix {
     }
     y[fromRowIndex] -= y[rowIndex]*factor;
   }
+
   void subtractToZeroInColumn(int masterRowIndex) {
     for (int rowIndex=0;rowIndex<rowCount();++rowIndex) {
       if (rowIndex!=masterRowIndex) {
