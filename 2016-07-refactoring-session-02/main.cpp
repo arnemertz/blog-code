@@ -16,20 +16,26 @@ public:
     : values{matrixValues}
   {}
 
-  int rows() const { return values.size(); }
-  int cols() const { return values[0].size(); }
-  Row& operator[](std::size_t index) { return values[index]; }
-  Row const& operator[](std::size_t index) const { return values[index]; }
+  int rows() const {
+    return values.size();
+  }
+  int cols() const {
+    return values[0].size();
+  }
+  Row& operator[](std::size_t index) {
+    return values[index];
+  }
+  Row const& operator[](std::size_t index) const {
+    return values[index];
+  }
 };
 
 
 typedef vector<float> Vector;
 
 
-// Solve y=m*x for x using Gauss-Jordan Elimination.
-// Result is placed back in y
-// Identity is placed back in m
-Vector invertMatrixMultiplication(Matrix m, Vector y) {
+// Solve y=m*x for x
+Vector gaussJordanElimination(Matrix m, Vector y) {
   int n = m.rows();
   assert(n==m.cols());
   vector<int> ref(n);
@@ -129,7 +135,7 @@ int main() {
 
   Vector y = {0.5,1.2,2.3};
 
-  Vector x = invertMatrixMultiplication(m, y);
+  Vector x = gaussJordanElimination(m, y);
 
   Vector mx = product(m,x);
 
