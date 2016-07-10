@@ -80,6 +80,14 @@ struct GaussJordanMatrix {
     }
     y[fromRowIndex] -= y[rowIndex]*factor;
   }
+  void subtractToZeroInColumn(int masterRowIndex) {
+    for (int rowIndex=0;rowIndex<rowCount();++rowIndex) {
+      if (rowIndex!=masterRowIndex) {
+        float factor = m[rowIndex][masterRowIndex];
+	subtractRow(masterRowIndex, factor, rowIndex);
+      }
+    }
+  }
 
   Vector getVectorInOriginalOrder() {
     Vector v = y;
@@ -103,12 +111,7 @@ Vector gaussJordanElimination(Matrix m, Vector y) {
     }
     gaussJordan.normalizeRow(row);
     // Make all lower rows have zero in this column
-    for (int j=0;j<rowCount;++j) {
-      if (j!=row) {
-        float v = gaussJordan.m[j][row];
-	gaussJordan.subtractRow(row, v, j);
-      }
-    }
+    gaussJordan.subtractToZeroInColumn(row);
   }
   return gaussJordan.getVectorInOriginalOrder();
 }
