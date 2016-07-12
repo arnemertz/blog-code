@@ -1,4 +1,4 @@
-# Refactoring Session #2: Gauss Jordan Eliminatino
+# Refactoring Session #2: Gauss Jordan Elimination
 
 This refactoring is covered by two blog posts:
 
